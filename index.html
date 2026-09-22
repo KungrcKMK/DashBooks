@@ -1,0 +1,1487 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<title>🏪 DashBooks</title>
+<meta name="theme-color" content="#0d9488">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="บัญชีร้าน">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;font-family:"Kanit","Sarabun","Noto Sans Thai",sans-serif;background:#f1f5f9;color:#0f172a;
+     padding-bottom:calc(96px + env(safe-area-inset-bottom));-webkit-text-size-adjust:100%}
+header{background:linear-gradient(135deg,#0d9488,#14b8a6);color:#fff;text-align:center;
+       padding:calc(16px + env(safe-area-inset-top)) 16px 16px}
+header h1{margin:0;font-size:22px;word-break:break-word}
+header p{margin:4px 0 0;font-size:14px;opacity:.9}
+.wrap{padding:12px;max-width:540px;margin:0 auto}
+.card{background:#fff;border-radius:16px;padding:14px;margin-bottom:12px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.tabs{display:flex;gap:8px;margin-bottom:12px}
+.tabs button{flex:1;padding:12px 4px;border:0;border-radius:12px;background:#e2e8f0;font-size:15px;font-weight:600;font-family:inherit}
+.tabs button.on{background:#0d9488;color:#fff}
+.sum{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.box{border-radius:14px;padding:12px;text-align:center;font-size:14px}
+.box b{display:block;font-size:21px;margin-top:4px}
+.sell{background:#dcfce7;color:#166534}
+.buy{background:#fee2e2;color:#991b1b}
+.draw{background:#ffedd5;color:#9a3412}
+.cash{background:#e2e8f0;color:#334155}
+.profit{grid-column:1/3;background:#e0f2fe;color:#075985}
+.profit b{font-size:31px}
+.owe{grid-column:1/3;background:#fef3c7;color:#92400e}
+.mood{font-size:34px;display:block}
+.bars{display:flex;align-items:flex-end;gap:6px;height:112px;margin-top:8px}
+.bar{flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;height:100%}
+.bar i{width:100%;border-radius:6px 6px 0 0;min-height:3px;display:block}
+.bar span{font-size:11px;margin-top:4px;color:#64748b}
+h3{margin:0 0 10px;font-size:16px}
+.lbl{font-size:15px;font-weight:600;margin:2px 0 6px;color:#475569}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+.chip{padding:9px 12px;border-radius:999px;background:#f1f5f9;border:2px solid transparent;font-size:14px;font-family:inherit}
+.chip:active{border-color:#0d9488;background:#ccfbf1}
+input{width:100%;padding:13px;border:2px solid #e2e8f0;border-radius:12px;font-size:17px;font-family:inherit;margin-bottom:10px;background:#fff;color:#0f172a}
+#amt,#dAmt,#payAmt{font-size:28px;text-align:center;font-weight:700;margin-bottom:4px}
+#qPrice{font-size:22px;text-align:center;font-weight:700;margin-bottom:4px}
+.fxr{font-size:15px;font-weight:700;color:#16a34a;min-height:19px;margin:0 0 8px;text-align:center;line-height:1.3}
+.fxr.bad{color:#dc2626}
+.ops{display:flex;gap:5px;margin-bottom:12px}
+.ops button{flex:1;padding:12px 0;border:0;border-radius:10px;background:#eef2ff;color:#4338ca;font-size:18px;font-weight:800;font-family:inherit}
+.ops button:active{background:#c7d2fe}
+.ops button.bk{background:#fee2e2;color:#991b1b;font-size:15px}
+.hintf{font-size:12px;color:#94a3b8;margin:-6px 0 10px;line-height:1.6}
+.quick{display:flex;gap:6px;margin-bottom:12px}
+.quick button{flex:1;padding:11px 0;border:0;border-radius:10px;background:#f1f5f9;font-size:14px;font-weight:600;font-family:inherit}
+.big{width:100%;padding:16px;border:0;border-radius:14px;font-size:19px;font-weight:700;color:#fff;font-family:inherit}
+.type{display:flex;gap:6px;margin-bottom:14px}
+.type button{flex:1;padding:12px 2px;border:0;border-radius:12px;background:#e2e8f0;font-size:13px;font-weight:700;font-family:inherit;line-height:1.5}
+.type button span{display:block;font-size:22px}
+.type button.k1{background:#dc2626;color:#fff}
+.type button.k2{background:#16a34a;color:#fff}
+.type button.k3{background:#ea580c;color:#fff}
+.item{display:flex;align-items:center;gap:10px;padding:11px 0;border-bottom:1px solid #f1f5f9}
+.item:last-child{border:0}
+.item .e{font-size:26px}
+.item .t{flex:1;min-width:0}
+.item .t b{display:block;font-size:15px;font-weight:600}
+.item .t small{color:#94a3b8;font-size:12px}
+.item .m{font-weight:700;font-size:16px;white-space:nowrap}
+.item .x{background:none;border:0;color:#cbd5e1;font-size:20px;padding:4px 2px}
+.item .mn{background:#f1f5f9;border:0;color:#64748b;font-size:14px;font-weight:700;border-radius:9px;padding:7px 9px;font-family:inherit}
+.rank{display:flex;align-items:center;gap:10px;padding:8px 0;font-size:15px}
+.rank b{margin-left:auto;color:#16a34a}
+.tools{display:flex;gap:8px;flex-wrap:wrap}
+.tools button{flex:1;min-width:112px;padding:12px 6px;border:0;border-radius:12px;background:#f1f5f9;color:#475569;font-size:14px;font-weight:600;font-family:inherit}
+.empty{text-align:center;color:#94a3b8;padding:26px 0;font-size:15px;line-height:1.7}
+.tip{background:#fef9c3;color:#854d0e;border-radius:14px;padding:12px;font-size:14px;line-height:1.8;margin-bottom:12px}
+.shopnow{display:flex;align-items:center;gap:12px;background:#f1f5f9;border-radius:14px;padding:12px;margin-bottom:10px}
+.shopnow .ic{font-size:38px}
+.shopnow .nm{flex:1;min-width:0}
+.shopnow .nm b{display:block;font-size:17px}
+.shopnow .nm small{color:#94a3b8;font-size:12px}
+.emos{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-bottom:14px}
+.emos button{padding:10px 0;border:2px solid transparent;border-radius:12px;background:#f1f5f9;font-size:26px;line-height:1}
+.emos button.on{border-color:#0d9488;background:#ccfbf1}
+.dcard{background:#fff;border-radius:16px;padding:12px 14px;margin-bottom:10px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.drow{display:flex;align-items:center;gap:11px}
+.drow .da{font-size:30px}
+.drow .dn{flex:1;min-width:0}
+.drow .dn b{display:block;font-size:16px}
+.drow .dn small{font-size:12px;color:#94a3b8}
+.drow .dm{font-weight:700;font-size:19px;color:#b45309;white-space:nowrap}
+.late{background:#fee2e2;color:#b91c1c;border-radius:999px;padding:1px 8px;font-size:11px;font-weight:700;margin-left:4px}
+.dbody{border-top:1px dashed #e2e8f0;margin-top:10px;padding-top:6px}
+.dline{display:flex;align-items:center;gap:8px;padding:7px 0;font-size:14px}
+.dline .dt{flex:1;min-width:0}
+.dline .dt small{display:block;color:#94a3b8;font-size:11px}
+.dline .dv{font-weight:700;color:#b45309;white-space:nowrap}
+.dline .x{background:none;border:0;color:#cbd5e1;font-size:18px;padding:2px}
+.dbtns{display:flex;gap:8px;margin-top:10px}
+.dbtns button{flex:1;padding:12px 4px;border:0;border-radius:12px;font-size:14px;font-weight:700;font-family:inherit}
+.b1{background:#16a34a;color:#fff}
+.b2{background:#f1f5f9;color:#475569}
+.b3{background:#fee2e2;color:#991b1b}
+.paid{opacity:.55}
+.chk{display:flex;align-items:center;gap:9px;font-size:15px;color:#475569;margin:2px 0 14px;line-height:1.5}
+.chk input{width:23px;height:23px;margin:0;flex:0 0 auto}
+.mrow{display:flex;gap:8px;align-items:center;margin-bottom:12px}
+.mrow button{width:58px;padding:14px 0;border:0;border-radius:12px;background:#f1f5f9;font-size:17px;font-family:inherit}
+.mrow select{flex:1;padding:13px;border:2px solid #e2e8f0;border-radius:12px;font-size:16px;font-family:inherit;background:#fff;color:#0f172a;-webkit-appearance:none;text-align:center}
+.prev{width:100%;border-radius:12px;display:block;background:#f8fafc}
+.qhead{background:linear-gradient(135deg,#4338ca,#6366f1);color:#fff;border-radius:16px;padding:14px;margin-bottom:12px;text-align:center}
+.qhead b{display:block;font-size:40px;line-height:1.25;margin:2px 0}
+.qhead small{font-size:13px;opacity:.9}
+.qgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+.qbtn{border:0;border-radius:16px;padding:10px 4px;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.07);font-family:inherit;
+      min-height:98px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px}
+.qbtn .qe{font-size:29px;line-height:1.2}
+.qbtn .qn{font-size:13px;font-weight:600;color:#334155;line-height:1.35;width:100%;padding:0 2px;
+          overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.qbtn .qp{font-size:17px;font-weight:800;color:#16a34a}
+.qbtn.isbuy .qp{color:#dc2626}
+.qbtn:active{transform:scale(.95)}
+.qbtn.ed{outline:3px dashed #6366f1;outline-offset:-3px}
+.qadd{background:#eef2ff;box-shadow:none;border:2px dashed #a5b4fc;color:#4338ca;font-weight:700;font-size:14px}
+.pack{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.pack button{flex:1;min-width:140px;padding:14px 6px;border:0;border-radius:12px;background:#eef2ff;color:#4338ca;font-size:15px;font-weight:700;font-family:inherit}
+.padexp{background:#1e293b;color:#cbd5e1;border-radius:14px 14px 0 0;padding:10px 16px;font-size:18px;text-align:right;
+        overflow:hidden;white-space:nowrap;min-height:42px}
+.padv{background:#0f172a;color:#fff;border-radius:0 0 14px 14px;text-align:right;font-size:36px;font-weight:800;
+      padding:4px 16px 16px;margin-bottom:12px;overflow:hidden;white-space:nowrap}
+.pad{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px}
+.pad button{padding:16px 0;border:0;border-radius:14px;background:#f1f5f9;font-size:23px;font-weight:700;font-family:inherit;color:#0f172a}
+.pad button.op{background:#eef2ff;color:#4338ca}
+.pad button.wd{grid-column:span 2;font-size:18px}
+.pad button.clr{background:#fee2e2;color:#991b1b}
+.toast{position:fixed;left:12px;right:12px;bottom:calc(88px + env(safe-area-inset-bottom));background:#0f172a;color:#fff;
+       border-radius:14px;padding:11px 12px;display:flex;align-items:center;gap:10px;z-index:80;font-size:15px;
+       box-shadow:0 8px 22px rgba(0,0,0,.28)}
+.toast b{flex:1;min-width:0;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.toast button{background:#475569;color:#fff;border:0;border-radius:10px;padding:9px 13px;font-family:inherit;font-size:14px;font-weight:700}
+.nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #e2e8f0;display:flex;
+     padding:6px 1px calc(6px + env(safe-area-inset-bottom))}
+.nav button{flex:1;background:none;border:0;padding:7px 0;font-size:10px;color:#94a3b8;font-family:inherit}
+.nav button.on{color:#0d9488;font-weight:700}
+.nav button span{display:block;font-size:21px}
+.mask{position:fixed;inset:0;background:rgba(15,23,42,.6);z-index:99;display:flex;align-items:center;justify-content:center;padding:18px}
+.modal{background:#fff;border-radius:20px;padding:20px;width:100%;max-width:430px;max-height:88vh;overflow:auto}
+.modal h2{margin:0 0 4px;font-size:20px}
+.modal p{margin:0 0 14px;font-size:14px;color:#64748b;line-height:1.7}
+.hide{display:none}
+</style>
+</head>
+<body>
+
+<header>
+  <h1 id="hTitle">🏪 สมุดบัญชีร้านค้า</h1>
+  <p id="today">📅</p>
+</header>
+
+<div class="wrap">
+
+  <!-- ========== หน้าสรุป ========== -->
+  <div id="pgHome">
+    <div id="tipBox" class="tip hide"></div>
+
+    <div class="tools" style="margin-bottom:12px">
+      <button style="background:#4f46e5;color:#fff;font-size:16px;padding:17px 6px" onclick="document.getElementById('nQuick').click()">⚡ โหมดจดเร็ว</button>
+      <button style="background:#0ea5e9;color:#fff;font-size:16px;padding:17px 6px" onclick="document.getElementById('nRep').click()">🖼️ สรุปรายเดือน</button>
+    </div>
+
+    <div class="tabs">
+      <button class="on" onclick="setRange('d',this)">📆 วันนี้</button>
+      <button onclick="setRange('w',this)">🗓️ สัปดาห์นี้</button>
+      <button onclick="setRange('m',this)">📅 เดือนนี้</button>
+    </div>
+
+    <div class="card sum">
+      <div class="box sell">🛒 ขายได้<b id="sSell">0</b></div>
+      <div class="box buy">📦 ลงทุนซื้อของ<b id="sBuy">0</b></div>
+      <div class="box profit"><span class="mood" id="sMood">😄</span>💰 กำไร (ขาย − ลงทุน)<b id="sProfit">0</b></div>
+      <div class="box draw">🏧 ถอนไปใช้<b id="sDraw">0</b></div>
+      <div class="box cash">👛 เงินเหลือในร้าน<b id="sCash">0</b></div>
+      <div class="box owe" onclick="document.getElementById('nDebt').click()">📒 ลูกค้าติดหนี้ (แตะดู)<b id="sOwe">0</b></div>
+    </div>
+
+    <div class="card">
+      <h3>📊 กำไร 7 วันล่าสุด</h3>
+      <div class="bars" id="bars"></div>
+    </div>
+
+    <div class="card">
+      <h3>🔥 ขายดี 3 อันดับ</h3>
+      <div id="rank"></div>
+    </div>
+
+    <div class="card">
+      <h3>🧾 รายการล่าสุด</h3>
+      <div id="list"></div>
+    </div>
+  </div>
+
+  <!-- ========== หน้าจดเร็ว ========== -->
+  <div id="pgQuick" class="hide">
+    <div class="qhead">
+      <small>💰 ยอดขายวันนี้</small>
+      <b id="qToday">0 ฿</b>
+      <small id="qCount">ยังไม่ได้จดวันนี้</small>
+    </div>
+
+    <div id="qEmpty"></div>
+    <div class="qgrid" id="qGrid"></div>
+
+    <div class="tools" style="margin-bottom:12px">
+      <button id="qEdBtn" onclick="qEditToggle()">✏️ แก้ไขปุ่ม</button>
+      <button onclick="qUndo()">↩️ ยกเลิกล่าสุด</button>
+      <button id="qSndBtn" onclick="qSound()">🔊 เสียง: เปิด</button>
+      <button id="qWakeBtn" onclick="qWake()">☀️ กันจอดับ: ปิด</button>
+    </div>
+
+    <div class="card">
+      <h3>🧾 เพิ่งจดไปวันนี้</h3>
+      <div id="qList"></div>
+    </div>
+  </div>
+
+  <!-- ========== หน้าบันทึก ========== -->
+  <div id="pgAdd" class="hide">
+    <div class="card">
+      <div class="type">
+        <button id="t1" onclick="setType('buy')"><span>📦</span>ลงทุน<br>ซื้อของเข้าร้าน</button>
+        <button id="t2" onclick="setType('sell')"><span>🛒</span>ขาย<br>ได้เงินเข้าร้าน</button>
+        <button id="t3" onclick="setType('draw')"><span>🏧</span>ถอนไปใช้<br>เอาเงินออก</button>
+      </div>
+
+      <div class="lbl" id="lblWhat">ขายอะไรไป?</div>
+      <input id="what" type="text" autocomplete="off" placeholder="">
+      <div class="chips" id="chips"></div>
+
+      <div class="lbl" id="lblQty">จำนวน / หน่วย (ไม่ใส่ก็ได้)</div>
+      <input id="qty" type="text" autocomplete="off" placeholder="เช่น 3 ถุง, 10 ชาม, 1 ลัง">
+
+      <div class="lbl" id="lblAmt">ได้เงินกี่บาท?</div>
+      <input id="amt" type="text" inputmode="decimal" autocomplete="off" placeholder="120 หรือ 50*3+20" oninput="fx('amt','amtR')">
+      <div id="amtR" class="fxr"></div>
+      <div class="ops">
+        <button onclick="ins('amt','amtR','+')">+</button>
+        <button onclick="ins('amt','amtR','-')">−</button>
+        <button onclick="ins('amt','amtR','*')">×</button>
+        <button onclick="ins('amt','amtR','/')">÷</button>
+        <button onclick="ins('amt','amtR','%')">%</button>
+        <button onclick="ins('amt','amtR','(')">(</button>
+        <button onclick="ins('amt','amtR',')')">)</button>
+        <button class="bk" onclick="bks('amt','amtR')">⌫</button>
+      </div>
+      <div class="hintf">🧮 พิมพ์สูตรได้เลย เช่น <b>50*3</b> = ชามละ 50 สามชาม · <b>500-10%</b> = ลด 10%</div>
+      <div class="quick">
+        <button onclick="addAmt(20)">+20</button>
+        <button onclick="addAmt(50)">+50</button>
+        <button onclick="addAmt(100)">+100</button>
+        <button onclick="addAmt(500)">+500</button>
+        <button onclick="clr('amt','amtR')">🗑️</button>
+      </div>
+
+      <div class="lbl">📅 วันที่</div>
+      <input id="dt" type="date">
+
+      <button id="btnSave" class="big" onclick="save()">✅ บันทึก</button>
+    </div>
+  </div>
+
+  <!-- ========== หน้าลูกหนี้ ========== -->
+  <div id="pgDebt" class="hide">
+    <div class="card sum" style="grid-template-columns:1fr 1fr">
+      <div class="box owe" style="grid-column:1/3">📒 ค้างจ่ายรวมทั้งหมด<b id="dTotal">0</b></div>
+      <div class="box cash">👥 จำนวนลูกหนี้<b id="dPeople">0</b></div>
+      <div class="box draw">🔴 ค้างเกิน 30 วัน<b id="dLate">0</b></div>
+    </div>
+
+    <button class="big" style="background:#0d9488;margin-bottom:12px" onclick="openDebt()">➕ จดหนี้ใหม่</button>
+
+    <div id="dList"></div>
+
+    <div class="card">
+      <h3>✅ เก็บครบแล้ว (ประวัติ)</h3>
+      <div id="dDone"></div>
+    </div>
+  </div>
+
+  <!-- ========== หน้าสรุปรายเดือน ========== -->
+  <div id="pgRep" class="hide">
+    <div class="card">
+      <h3>🖼️ สรุปรายเดือน (ส่งเป็นรูป)</h3>
+      <div class="mrow">
+        <button onclick="mShift(-1)">◀</button>
+        <select id="mSel" onchange="mPick(this.value)"></select>
+        <button onclick="mShift(1)">▶</button>
+      </div>
+      <label class="chk"><input id="rpDebt" type="checkbox" checked onchange="buildReport()"> ใส่ยอดลูกค้าติดหนี้ในรูปด้วย</label>
+      <button class="big" style="background:#0d9488" onclick="shareReport()">📤 ส่งรูปนี้เข้าไลน์ / แชร์</button>
+      <button class="big" style="background:#f1f5f9;color:#475569;margin-top:8px" onclick="copyReport()">📋 ส่งเป็นข้อความแทน</button>
+      <div style="font-size:13px;color:#94a3b8;margin-top:10px;line-height:1.7">
+        💡 หรือกดค้างที่รูปด้านล่าง ➜ เลือก "บันทึกรูปภาพ" เก็บลงเครื่องได้เลย
+      </div>
+    </div>
+    <div class="card" style="padding:10px">
+      <img id="rpImg" class="prev" alt="รูปสรุปรายเดือน">
+    </div>
+  </div>
+
+  <!-- ========== หน้าเครื่องมือ ========== -->
+  <div id="pgSet" class="hide">
+    <div class="card">
+      <h3>🏪 ร้านของฉัน</h3>
+      <div class="shopnow">
+        <div class="ic" id="setEmo">🏪</div>
+        <div class="nm"><b id="setName">สมุดบัญชีร้านค้า</b><small>ชื่อนี้จะขึ้นบนหัวจอ ไฟล์ส่งออก และรูปสรุป</small></div>
+      </div>
+      <button class="big" style="background:#0d9488" onclick="openShop(false)">✏️ แก้ไขชื่อร้าน / ไอคอน</button>
+    </div>
+
+    <div class="card">
+      <h3>🧮 ใช้สูตรคำนวณในช่องเงิน</h3>
+      <div style="font-size:15px;line-height:2.1;color:#475569">
+        พิมพ์สูตรลงช่องเงินได้เลย ไม่ต้องเปิดเครื่องคิดเลข<br>
+        ─────────────<br>
+        <b>50*3</b> ➜ 150 (ชามละ 50 สามชาม)<br>
+        <b>50*3+20+15</b> ➜ 185 (หลายอย่างรวมกัน)<br>
+        <b>85*12</b> ➜ 1,020 (โหลละ 85 สิบสองโหล)<br>
+        <b>500-10%</b> ➜ 450 (ลดให้ 10%)<br>
+        <b>1000+7%</b> ➜ 1,070 (บวกเพิ่ม 7%)<br>
+        <b>(50+30)*2</b> ➜ 160 (คิดในวงเล็บก่อน)<br>
+        <b>350/2</b> ➜ 175 (หารครึ่ง)<br>
+        ─────────────<br>
+        ✅ ใต้ช่องมีปุ่ม + − × ÷ % ( ) ⌫ แตะได้เลย ไม่ต้องหาบนคีย์บอร์ด
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>🛠️ เครื่องมือ</h3>
+      <div class="tools">
+        <button onclick="csv()">📤 ส่งออก Excel</button>
+        <button onclick="backup()">💾 สำรองข้อมูล</button>
+        <button onclick="document.getElementById('fRes').click()">📥 กู้ข้อมูล</button>
+        <button onclick="wipe()" style="background:#fee2e2;color:#991b1b">🗑️ ล้างทั้งหมด</button>
+      </div>
+      <input id="fRes" type="file" accept=".json,application/json,text/plain" class="hide" onchange="restore(event)">
+      <div style="font-size:13px;color:#94a3b8;margin-top:10px;line-height:1.7">
+        💡 บนไอโฟน กด "สำรองข้อมูล" แล้วเลือกส่งเข้าไลน์ตัวเอง หรือ "บันทึกลงในไฟล์" ได้เลย
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>📲 ติดตั้งเป็นแอป</h3>
+      <div id="installArea" style="font-size:15px;line-height:1.9;color:#475569"></div>
+    </div>
+
+    <div class="card">
+      <h3>ℹ️ อ่านตรงนี้ก่อนใช้</h3>
+      <div style="font-size:15px;line-height:2;color:#475569">
+        📦 <b>ลงทุน</b> = เอาเงินไปซื้อของมาขาย / จ่ายค่าร้าน<br>
+        🛒 <b>ขาย</b> = ขายของได้เงินเข้าร้าน<br>
+        🏧 <b>ถอนไปใช้</b> = หยิบเงินร้านไปใช้ส่วนตัว<br>
+        📒 <b>ติดหนี้</b> = ให้ของไปก่อน ยังไม่ได้เงิน<br>
+        ⚡ <b>จดเร็ว</b> = แตะปุ่มเดียวจดยอด ตอนลูกค้าแน่น<br>
+        🧮 <b>สูตร</b> = พิมพ์ 50*3 ในช่องเงินได้เลย<br>
+        🖼️ <b>สรุป</b> = ทำรูปสรุปทั้งเดือน ส่งไลน์ได้<br>
+        ─────────────<br>
+        💰 <b>กำไร</b> = ขาย − ลงทุน<br>
+        👛 <b>เงินเหลือ</b> = ขาย − ลงทุน − ถอน<br>
+        ⚠️ หนี้ยังไม่นับเป็นยอดขาย จนกว่าจะกด "รับชำระ"<br>
+        ⚠️ ข้อมูลเก็บในเครื่อง ควรกดสำรองทุกสิ้นเดือน
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ========== แถบแจ้งเตือน + ยกเลิก ========== -->
+<div id="toast" class="toast hide">
+  <b id="toastMsg"></b>
+  <button onclick="qUndo()">↩️ ยกเลิก</button>
+</div>
+
+<div class="nav">
+  <button id="nHome" class="on" onclick="page('Home',this)"><span>🏠</span>หน้าแรก</button>
+  <button id="nQuick" onclick="page('Quick',this)"><span>⚡</span>จดเร็ว</button>
+  <button id="nAdd" onclick="page('Add',this)"><span>➕</span>บันทึก</button>
+  <button id="nDebt" onclick="page('Debt',this)"><span>📒</span>ลูกหนี้</button>
+  <button id="nRep" onclick="page('Rep',this)"><span>🖼️</span>สรุป</button>
+  <button id="nSet" onclick="page('Set',this)"><span>⚙️</span>ตั้งค่า</button>
+</div>
+
+<!-- ========== กล่องตั้งชื่อร้าน ========== -->
+<div id="mask" class="mask hide">
+  <div class="modal">
+    <h2 id="mdTitle">🏪 ตั้งชื่อร้านของคุณ</h2>
+    <p id="mdSub">ใส่ชื่อร้านที่ใช้เรียกกันจริงๆ ได้เลย</p>
+    <div class="lbl">ชื่อร้าน</div>
+    <input id="shopName" type="text" maxlength="30" autocomplete="off" placeholder="เช่น ร้านป้าแดง">
+    <div class="lbl">เลือกไอคอนร้าน</div>
+    <div class="emos" id="emos"></div>
+    <button class="big" style="background:#0d9488" onclick="saveShop()">✅ บันทึกชื่อร้าน</button>
+    <button id="mdCancel" class="big hide" style="background:#e2e8f0;color:#475569;margin-top:8px" onclick="closeShop()">ยกเลิก</button>
+  </div>
+</div>
+
+<!-- ========== กล่องแก้ไขปุ่มลัด ========== -->
+<div id="maskQ" class="mask hide">
+  <div class="modal">
+    <h2 id="qTitle">➕ เพิ่มปุ่มลัด</h2>
+    <p>ตั้งชื่อสั้นๆ กับราคาที่ขายบ่อย เช่น "ก๋วยเตี๋ยว 50"</p>
+    <div class="lbl">ชื่อสินค้า</div>
+    <input id="qName" type="text" maxlength="18" autocomplete="off" placeholder="เช่น ก๋วยเตี๋ยว">
+    <div class="lbl">ราคาต่อครั้ง (ใส่สูตรได้)</div>
+    <input id="qPrice" type="text" inputmode="decimal" autocomplete="off" placeholder="50 หรือ 45+5" oninput="fx('qPrice','qPriceR')">
+    <div id="qPriceR" class="fxr"></div>
+    <div class="ops">
+      <button onclick="ins('qPrice','qPriceR','+')">+</button>
+      <button onclick="ins('qPrice','qPriceR','-')">−</button>
+      <button onclick="ins('qPrice','qPriceR','*')">×</button>
+      <button onclick="ins('qPrice','qPriceR','/')">÷</button>
+      <button onclick="ins('qPrice','qPriceR','%')">%</button>
+      <button class="bk" onclick="bks('qPrice','qPriceR')">⌫</button>
+    </div>
+    <div class="lbl">เลือกไอคอน</div>
+    <div class="emos" id="qEmos"></div>
+    <div class="lbl">ปุ่มนี้คือ</div>
+    <div class="type">
+      <button id="qt1" onclick="qTypeSet('sell')"><span>🛒</span>ขายได้เงิน</button>
+      <button id="qt2" onclick="qTypeSet('buy')"><span>📦</span>จ่ายเงินออก</button>
+    </div>
+    <button class="big" style="background:#4f46e5" onclick="qSave()">✅ บันทึกปุ่ม</button>
+    <div class="dbtns hide" id="qMoveRow">
+      <button class="b2" onclick="qMove(-1)">⬅️ เลื่อนซ้าย</button>
+      <button class="b3" onclick="qDel()">🗑️ ลบปุ่ม</button>
+      <button class="b2" onclick="qMove(1)">เลื่อนขวา ➡️</button>
+    </div>
+    <button class="big" style="background:#e2e8f0;color:#475569;margin-top:8px" onclick="qClose()">ปิด</button>
+  </div>
+</div>
+
+<!-- ========== กล่องแป้นคิดเลข + บันทึกด่วน ========== -->
+<div id="maskN" class="mask hide">
+  <div class="modal">
+    <h2>🧮 คิดเลข + บันทึกเลย</h2>
+    <p>กดตัวเลขและเครื่องหมายได้เลย เช่น 50 × 3 + 20 แล้วกดบันทึกทีเดียว</p>
+    <div id="nExp" class="padexp">—</div>
+    <div id="nAmt" class="padv">0 ฿</div>
+    <div class="pad">
+      <button onclick="nKey('7')">7</button><button onclick="nKey('8')">8</button><button onclick="nKey('9')">9</button><button class="op" onclick="nKey('/')">÷</button>
+      <button onclick="nKey('4')">4</button><button onclick="nKey('5')">5</button><button onclick="nKey('6')">6</button><button class="op" onclick="nKey('*')">×</button>
+      <button onclick="nKey('1')">1</button><button onclick="nKey('2')">2</button><button onclick="nKey('3')">3</button><button class="op" onclick="nKey('-')">−</button>
+      <button onclick="nKey('0')">0</button><button onclick="nKey('00')">00</button><button onclick="nKey('.')">.</button><button class="op" onclick="nKey('+')">+</button>
+      <button class="wd clr" onclick="nKey('C')">🗑️ ล้าง</button><button class="wd" onclick="nKey('<')">⌫ ลบทีละตัว</button>
+    </div>
+    <input id="nWhat" type="text" maxlength="24" autocomplete="off" placeholder="ชื่อรายการ (ไม่ใส่ = ขายหน้าร้าน)">
+    <button class="big" style="background:#16a34a" onclick="nSave()">✅ บันทึกยอดขาย</button>
+    <button class="big" style="background:#e2e8f0;color:#475569;margin-top:8px" onclick="nClose()">ยกเลิก</button>
+  </div>
+</div>
+
+<!-- ========== กล่องจดหนี้ใหม่ ========== -->
+<div id="maskD" class="mask hide">
+  <div class="modal">
+    <h2>📒 จดหนี้ใหม่</h2>
+    <p>ให้ของไปก่อน ยังไม่ได้เงิน ➜ จดตรงนี้ ยอดนี้จะยังไม่นับเป็นยอดขาย</p>
+    <div class="lbl">ชื่อลูกค้า</div>
+    <input id="dName" type="text" maxlength="30" autocomplete="off" placeholder="เช่น ป้าสมร, บ้านหลังปั๊ม">
+    <div class="chips" id="dChips"></div>
+    <div class="lbl">เอาอะไรไป?</div>
+    <input id="dWhat" type="text" autocomplete="off" placeholder="เช่น ของชำ, ก๋วยเตี๋ยว 2 ชาม">
+    <div class="lbl">เป็นเงินกี่บาท? (ใส่สูตรได้)</div>
+    <input id="dAmt" type="text" inputmode="decimal" autocomplete="off" placeholder="350 หรือ 50*3+200" oninput="fx('dAmt','dAmtR')">
+    <div id="dAmtR" class="fxr"></div>
+    <div class="ops">
+      <button onclick="ins('dAmt','dAmtR','+')">+</button>
+      <button onclick="ins('dAmt','dAmtR','-')">−</button>
+      <button onclick="ins('dAmt','dAmtR','*')">×</button>
+      <button onclick="ins('dAmt','dAmtR','/')">÷</button>
+      <button onclick="ins('dAmt','dAmtR','%')">%</button>
+      <button class="bk" onclick="bks('dAmt','dAmtR')">⌫</button>
+    </div>
+    <div class="quick">
+      <button onclick="dAdd(20)">+20</button>
+      <button onclick="dAdd(50)">+50</button>
+      <button onclick="dAdd(100)">+100</button>
+      <button onclick="dAdd(500)">+500</button>
+      <button onclick="clr('dAmt','dAmtR')">🗑️</button>
+    </div>
+    <div class="lbl">📅 วันที่ติดหนี้</div>
+    <input id="dDate" type="date">
+    <button class="big" style="background:#b45309" onclick="saveDebt()">✅ บันทึกหนี้</button>
+    <button class="big" style="background:#e2e8f0;color:#475569;margin-top:8px" onclick="closeDebt()">ยกเลิก</button>
+  </div>
+</div>
+
+<!-- ========== กล่องรับชำระ ========== -->
+<div id="maskP" class="mask hide">
+  <div class="modal">
+    <h2 id="pTitle">💵 รับชำระเงิน</h2>
+    <p id="pSub"></p>
+    <div class="lbl">รับเงินมากี่บาท? (ใส่สูตรได้)</div>
+    <input id="payAmt" type="text" inputmode="decimal" autocomplete="off" placeholder="100 หรือ 50+50" oninput="fx('payAmt','payAmtR')">
+    <div id="payAmtR" class="fxr"></div>
+    <div class="ops">
+      <button onclick="ins('payAmt','payAmtR','+')">+</button>
+      <button onclick="ins('payAmt','payAmtR','-')">−</button>
+      <button onclick="ins('payAmt','payAmtR','*')">×</button>
+      <button onclick="ins('payAmt','payAmtR','/')">÷</button>
+      <button onclick="ins('payAmt','payAmtR','%')">%</button>
+      <button class="bk" onclick="bks('payAmt','payAmtR')">⌫</button>
+    </div>
+    <div class="quick">
+      <button onclick="payFull()">💯 จ่ายครบ</button>
+      <button onclick="pAdd(100)">+100</button>
+      <button onclick="pAdd(500)">+500</button>
+      <button onclick="clr('payAmt','payAmtR')">🗑️</button>
+    </div>
+    <label class="chk"><input id="payIncome" type="checkbox" checked> นับเป็นยอดขายของวันนี้ด้วย (แนะนำให้ติ๊กไว้)</label>
+    <button class="big" style="background:#16a34a" onclick="payDo()">✅ บันทึกรับเงิน</button>
+    <button class="big" style="background:#e2e8f0;color:#475569;margin-top:8px" onclick="closePay()">ยกเลิก</button>
+  </div>
+</div>
+
+<script>
+/* ══════════ 1) ข้อมูลร้าน ══════════ */
+const SKEY='shopbook_shop';
+let shop; try{shop=JSON.parse(localStorage.getItem(SKEY))||null;}catch(e){shop=null;}
+const isFirst=!shop;
+if(!shop) shop={name:'สมุดบัญชีร้านค้า',emo:'🏪'};
+const EMOS=['🏪','🛒','🍜','☕','🥤','🍢','🍗','🥬','👕','💇','🔧','💊'];
+let pickEmo=shop.emo;
+
+/* ══════════ 2) ไอคอน + manifest ในตัว ══════════ */
+function makeIcon(size){
+  const c=document.createElement('canvas'); c.width=c.height=size;
+  const x=c.getContext('2d');
+  const g=x.createLinearGradient(0,0,size,size);
+  g.addColorStop(0,'#0d9488'); g.addColorStop(1,'#14b8a6');
+  x.fillStyle=g; x.fillRect(0,0,size,size);
+  x.textAlign='center'; x.textBaseline='middle';
+  x.font=Math.round(size*0.5)+'px "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif';
+  x.fillText(shop.emo,size/2,size*0.52);
+  return c.toDataURL('image/png');
+}
+/* ใช้ <link> ที่มีอยู่ใน <head> (manifest.json / apple-touch-icon.png เป็นค่าตั้งต้น)
+   แล้วแทนที่ด้วยชื่อร้าน + emoji ของร้านนี้ */
+let mfLink=document.querySelector('link[rel="manifest"]'),
+    apLink=document.querySelector('link[rel="apple-touch-icon"]');
+function buildManifest(){
+  try{
+    const i192=makeIcon(192), i512=makeIcon(512);
+    const base=location.href.split(/[?#]/)[0];
+    const mf={name:shop.name,short_name:shop.name.slice(0,12),
+      description:'บันทึกลงทุน ขาย ถอนเงิน ลูกหนี้ สรุปกำไรอัตโนมัติ',
+      start_url:base,scope:base.replace(/[^/]*$/,''),display:'standalone',orientation:'portrait',lang:'th',
+      background_color:'#f1f5f9',theme_color:'#0d9488',
+      icons:[{src:i192,sizes:'192x192',type:'image/png',purpose:'any'},
+             {src:i512,sizes:'512x512',type:'image/png',purpose:'any'},
+             {src:i512,sizes:'512x512',type:'image/png',purpose:'maskable'}]};
+    if(!mfLink){mfLink=document.createElement('link');mfLink.rel='manifest';document.head.appendChild(mfLink);}
+    mfLink.href='data:application/manifest+json,'+encodeURIComponent(JSON.stringify(mf));
+    if(!apLink){apLink=document.createElement('link');apLink.rel='apple-touch-icon';document.head.appendChild(apLink);}
+    apLink.href=i192;
+  }catch(e){}
+}
+
+/* ══════════ 3) ข้อมูล ══════════ */
+const KEY='shopbook_v3', DKEY='shopbook_debt_v1', QKEY='shopbook_quick_v1';
+let db=[];    try{db=JSON.parse(localStorage.getItem(KEY)||'[]');}catch(e){db=[];}
+let debts=[]; try{debts=JSON.parse(localStorage.getItem(DKEY)||'[]');}catch(e){debts=[];}
+let quick=[]; try{quick=JSON.parse(localStorage.getItem(QKEY)||'[]');}catch(e){quick=[];}
+let type='sell', range='d', DVIEW=[], payIdx=-1;
+let seq=0; const uid=()=>Date.now()*100+(seq=(seq+1)%100);
+
+const T={
+  buy :{emo:'📦',word:'ซื้อ',color:'#dc2626',sign:'−',lblWhat:'ซื้ออะไรมา?',ph:'เช่น น้ำแข็ง, ผงชูรส, ค่าเช่าร้าน',
+        lblAmt:'จ่ายไปกี่บาท? (ใส่สูตรได้)',save:'✅ บันทึกการลงทุน',
+        chips:['ของเข้าร้าน','วัตถุดิบ','น้ำแข็ง','แก๊ส','ค่าเช่าร้าน','ค่าน้ำ-ไฟ','ค่าน้ำมัน']},
+  sell:{emo:'🛒',word:'ขาย',color:'#16a34a',sign:'+',lblWhat:'ขายอะไรไป?',ph:'เช่น ก๋วยเตี๋ยว, น้ำอัดลม, ของชำ',
+        lblAmt:'ได้เงินกี่บาท? (ใส่สูตรได้)',save:'✅ บันทึกยอดขาย',
+        chips:['ขายหน้าร้าน','อาหาร','เครื่องดื่ม','ของชำ','ขายส่ง','ค่าส่ง']},
+  draw:{emo:'🏧',word:'ถอนไป',color:'#ea580c',sign:'−',lblWhat:'เอาเงินไปทำอะไร?',ph:'เช่น ค่าเทอมลูก, ค่ากับข้าว',
+        lblAmt:'ถอนไปกี่บาท? (ใส่สูตรได้)',save:'✅ บันทึกการถอน',
+        chips:['ค่ากับข้าว','ค่าเทอมลูก','ค่าน้ำ-ไฟบ้าน','ผ่อนรถ','ค่ายา','เก็บออม']}
+};
+
+const $=id=>document.getElementById(id);
+const money=n=>n.toLocaleString('th-TH',{maximumFractionDigits:2});
+const dkey=d=>{const x=new Date(d);x.setMinutes(x.getMinutes()-x.getTimezoneOffset());return x.toISOString().slice(0,10);};
+const thDate=s=>new Date(s+'T00:00:00').toLocaleDateString('th-TH',{day:'numeric',month:'short',year:'2-digit'});
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const safeFile=s=>String(s).replace(/[\\/:*?"<>|]/g,'').trim()||'ร้านค้า';
+const persist=()=>{try{localStorage.setItem(KEY,JSON.stringify(db));}catch(e){alert('⚠️ พื้นที่เก็บข้อมูลเต็ม');}};
+const persistD=()=>{try{localStorage.setItem(DKEY,JSON.stringify(debts));}catch(e){alert('⚠️ พื้นที่เก็บข้อมูลเต็ม');}};
+const persistQ=()=>{try{localStorage.setItem(QKEY,JSON.stringify(quick));}catch(e){}};
+const sumBy=(rows,t)=>rows.filter(x=>x.type===t).reduce((a,b)=>a+b.amount,0);
+const remain=d=>Math.max(0,(d.amount||0)-(d.paid||0));
+const ageOf=s=>Math.max(0,Math.floor((new Date().setHours(0,0,0,0)-new Date(s+'T00:00:00').getTime())/86400000));
+const oweAll=()=>debts.reduce((a,b)=>a+remain(b),0);
+function startOf(r){
+  const d=new Date(); d.setHours(0,0,0,0);
+  if(r==='w'){const g=(d.getDay()+6)%7; d.setDate(d.getDate()-g);}
+  if(r==='m'){d.setDate(1);}
+  return d;
+}
+
+/* ══════════ 4) 🧮 เครื่องคิดเลขในช่องกรอก ══════════ */
+function calcVal(input){
+  if(input===null||input===undefined) return NaN;
+  let s=String(input).replace(/[×xX✕∗]/g,'*').replace(/[÷]/g,'/')
+                     .replace(/[–—−]/g,'-').replace(/[,\s]/g,'');
+  if(!s) return NaN;
+  if(!/^[0-9+\-*/().%]+$/.test(s)) return NaN;
+  let i=0, pctM=false;
+  function atom(){
+    if(s[i]==='('){ i++; const v=expr(); if(isNaN(v)||s[i]!==')') return NaN; i++; return v; }
+    const st=i;
+    while(i<s.length && ((s[i]>='0'&&s[i]<='9')||s[i]==='.')) i++;
+    if(st===i) return NaN;
+    const n=parseFloat(s.slice(st,i));
+    return isFinite(n)?n:NaN;
+  }
+  function post(){
+    let v=atom();
+    while(s[i]==='%'){ i++; if(isNaN(v))return NaN; v=v/100; pctM=true; }
+    return v;
+  }
+  function un(){
+    if(s[i]==='-'){ i++; const v=un(); return isNaN(v)?NaN:-v; }
+    if(s[i]==='+'){ i++; return un(); }
+    return post();
+  }
+  function term(){
+    let v=un(); if(isNaN(v)) return NaN;
+    while(s[i]==='*'||s[i]==='/'){
+      const o=s[i++], r=un();
+      if(isNaN(r)) return NaN;
+      if(o==='/'){ if(r===0) return NaN; v=v/r; } else v=v*r;
+    }
+    return v;
+  }
+  function expr(){
+    let v=term(); if(isNaN(v)) return NaN;
+    while(s[i]==='+'||s[i]==='-'){
+      const o=s[i++];
+      pctM=false;
+      const r=term();
+      if(isNaN(r)) return NaN;
+      if(pctM) v=(o==='+')? v+v*r : v-v*r;
+      else     v=(o==='+')? v+r   : v-r;
+    }
+    return v;
+  }
+  const out=expr();
+  if(i!==s.length||isNaN(out)||!isFinite(out)) return NaN;
+  return Math.round(out*100)/100;
+}
+const hasOp=s=>/[+\-*/×÷()%]/.test(String(s));
+function fx(id,rid){
+  const el=$(id), o=$(rid); if(!el||!o) return;
+  const raw=(el.value||'').trim();
+  if(!raw||!hasOp(raw)){ o.textContent=''; o.className='fxr'; return; }
+  const v=calcVal(raw);
+  if(isNaN(v)){ o.textContent='⚠️ สูตรยังไม่สมบูรณ์ ลองตรวจดูอีกที'; o.className='fxr bad'; }
+  else{ o.textContent='🧮 = '+money(v)+' บาท'; o.className='fxr'; }
+}
+function ins(id,rid,ch){
+  const el=$(id); let v=el.value||'';
+  if('+-*/%'.indexOf(ch)>=0){
+    if(!v&&ch!=='-') return;
+    if(/[+\-*/]$/.test(v)) v=v.slice(0,-1);
+  }
+  el.value=v+ch; fx(id,rid);
+}
+function bks(id,rid){ const el=$(id); el.value=(el.value||'').slice(0,-1); fx(id,rid); }
+function clr(id,rid){ $(id).value=''; fx(id,rid); }
+function apnd(id,rid,n){
+  const el=$(id); const cur=(el.value||'').trim();
+  el.value=cur?(/[+\-*/(]$/.test(cur)?cur+n:cur+'+'+n):String(n);
+  fx(id,rid);
+}
+function addAmt(v){ apnd('amt','amtR',v); }
+function dAdd(v){ apnd('dAmt','dAmtR',v); }
+function pAdd(v){ apnd('payAmt','payAmtR',v); }
+
+/* ══════════ 5) ตั้งชื่อร้าน ══════════ */
+function drawEmos(){
+  const w=$('emos'); w.innerHTML='';
+  EMOS.forEach(e=>{
+    const b=document.createElement('button');
+    b.type='button'; b.textContent=e;
+    if(e===pickEmo) b.className='on';
+    b.onclick=()=>{pickEmo=e;drawEmos();};
+    w.appendChild(b);
+  });
+}
+function openShop(first){
+  pickEmo=shop.emo;
+  $('shopName').value=first?'':shop.name;
+  $('mdTitle').textContent=first?'🏪 ตั้งชื่อร้านของคุณ':'✏️ แก้ไขชื่อร้าน';
+  $('mdSub').textContent=first?'ใส่ชื่อร้านที่ใช้เรียกกันจริงๆ เช่น "ร้านป้าแดง"':'แก้ได้ตลอด · ถ้าติดตั้งลงหน้าจอโฮมแล้ว ชื่อไอคอนเดิมจะไม่เปลี่ยนตาม';
+  $('mdCancel').classList.toggle('hide',!!first);
+  drawEmos(); $('mask').classList.remove('hide');
+}
+function closeShop(){$('mask').classList.add('hide');}
+function saveShop(){
+  const n=$('shopName').value.trim();
+  if(!n){alert('⚠️ ใส่ชื่อร้านก่อนนะ');return;}
+  shop={name:n.slice(0,30),emo:pickEmo};
+  try{localStorage.setItem(SKEY,JSON.stringify(shop));}catch(e){}
+  closeShop(); applyBrand(); alert('✅ ตั้งชื่อร้านเป็น "'+shop.emo+' '+shop.name+'" แล้ว');
+}
+function applyBrand(){
+  document.title=shop.emo+' '+shop.name;
+  $('hTitle').textContent=shop.emo+' '+shop.name;
+  $('setEmo').textContent=shop.emo;
+  $('setName').textContent=shop.name;
+  const m=document.querySelector('meta[name="apple-mobile-web-app-title"]');
+  if(m) m.content=shop.name.slice(0,15);
+  buildManifest();
+}
+
+/* ══════════ 6) นำทาง ══════════ */
+function page(p,btn){
+  ['Home','Quick','Add','Debt','Rep','Set'].forEach(x=>$('pg'+x).classList.add('hide'));
+  $('pg'+p).classList.remove('hide');
+  document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  if(p==='Home') render();
+  if(p==='Quick') qRender();
+  if(p==='Debt') renderDebt();
+  if(p==='Rep'){ fillMonths(); buildReport(); }
+  window.scrollTo(0,0);
+}
+
+/* ══════════ 7) ฟอร์มบันทึก ══════════ */
+function setType(t){
+  type=t; const c=T[t];
+  $('t1').className=t==='buy'?'k1':'';
+  $('t2').className=t==='sell'?'k2':'';
+  $('t3').className=t==='draw'?'k3':'';
+  $('lblWhat').textContent=c.lblWhat;
+  $('what').placeholder=c.ph;
+  $('lblAmt').textContent=c.lblAmt;
+  $('lblQty').textContent=t==='draw'?'รายละเอียดเพิ่ม (ไม่ใส่ก็ได้)':'จำนวน / หน่วย (ไม่ใส่ก็ได้)';
+  $('btnSave').textContent=c.save;
+  $('btnSave').style.background=c.color;
+  const w=$('chips'); w.innerHTML='';
+  const used=[...new Set(db.filter(x=>x.type===t).slice(-40).reverse().map(x=>x.what))].slice(0,4);
+  [...new Set(used.concat(c.chips))].slice(0,10).forEach(n=>{
+    const b=document.createElement('button');
+    b.type='button'; b.className='chip'; b.textContent=n;
+    b.onclick=()=>{$('what').value=n;};
+    w.appendChild(b);
+  });
+}
+function save(){
+  const nm=$('what').value.trim(), raw=$('amt').value.trim(), a=calcVal(raw);
+  if(!nm){alert('⚠️ ใส่ก่อนว่า '+T[type].lblWhat);return;}
+  if(isNaN(a)){alert('⚠️ จำนวนเงินหรือสูตรไม่ถูกต้อง\nลองใหม่ เช่น 120 หรือ 50*3');return;}
+  if(a<=0){alert('⚠️ จำนวนเงินต้องมากกว่า 0');return;}
+  let q=$('qty').value.trim();
+  if(!q&&hasOp(raw)) q=raw.replace(/\*/g,'×').replace(/\//g,'÷');
+  db.push({id:uid(),type:type,what:nm,qty:q,amount:a,date:$('dt').value||dkey(new Date())});
+  persist();
+  alert('🎉 บันทึกแล้ว: '+T[type].word+' '+nm+' '+money(a)+' บาท');
+  $('what').value=''; $('qty').value=''; clr('amt','amtR');
+  $('nHome').click();
+}
+function del(id){
+  const r=db.find(x=>x.id===id); if(!r)return;
+  let msg='❌ ลบรายการนี้?';
+  if(r.src==='debt') msg='❌ ลบรายการนี้? (เป็นเงินที่เก็บหนี้มา ลบแล้วยอดหนี้จะไม่คืนกลับ)';
+  else if((r.n||1)>1) msg='❌ รายการนี้รวม '+r.n+' ครั้ง ('+money(r.amount)+' ฿) ลบทั้งหมดเลยไหม?';
+  if(!confirm(msg))return;
+  db=db.filter(x=>x.id!==id); persist(); render(); qRender();
+}
+
+/* ══════════ 8) หน้าสรุป ══════════ */
+function setRange(r,btn){
+  range=r;
+  document.querySelectorAll('.tabs button').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on'); render();
+}
+function render(){
+  const from=startOf(range);
+  const rows=db.filter(x=>new Date(x.date+'T00:00:00')>=from);
+  const s=sumBy(rows,'sell'), b=sumBy(rows,'buy'), d=sumBy(rows,'draw');
+  $('sSell').textContent=money(s);
+  $('sBuy').textContent=money(b);
+  $('sDraw').textContent=money(d);
+  $('sProfit').textContent=money(s-b);
+  $('sCash').textContent=money(s-b-d);
+  $('sMood').textContent=(s-b)>0?'😄':((s-b)===0?'😐':'😰');
+  $('sOwe').textContent=money(oweAll());
+
+  const days=[];
+  for(let k=6;k>=0;k--){const x=new Date();x.setDate(x.getDate()-k);days.push(dkey(x));}
+  const vals=days.map(dd=>{const r=db.filter(x=>x.date===dd);return sumBy(r,'sell')-sumBy(r,'buy');});
+  const max=Math.max(1,...vals.map(v=>Math.abs(v)));
+  $('bars').innerHTML=days.map((dd,n)=>{
+    const h=Math.round(Math.abs(vals[n])/max*88)+3;
+    const c=vals[n]<0?'#f87171':'#14b8a6';
+    const lb=new Date(dd+'T00:00:00').toLocaleDateString('th-TH',{weekday:'short'});
+    return '<div class="bar" title="'+money(vals[n])+' บาท"><i style="height:'+h+'px;background:'+c+'"></i><span>'+lb+'</span></div>';
+  }).join('');
+
+  const g={};
+  rows.filter(x=>x.type==='sell').forEach(x=>{g[x.what]=(g[x.what]||0)+x.amount;});
+  const tops=Object.entries(g).sort((a,b)=>b[1]-a[1]).slice(0,3);
+  const medal=['🥇','🥈','🥉'];
+  $('rank').innerHTML=tops.length
+    ? tops.map((t,i)=>'<div class="rank">'+medal[i]+' '+esc(t[0])+' <b>'+money(t[1])+' ฿</b></div>').join('')
+    : '<div class="empty">ยังไม่มียอดขายในช่วงนี้</div>';
+
+  const sorted=rows.slice().sort((a,b)=>b.id-a.id).slice(0,60);
+  $('list').innerHTML=sorted.length?sorted.map(x=>{
+    const c=T[x.type]||T.sell;
+    const ic=x.src==='debt'?'📒':(x.emo||c.emo);
+    return '<div class="item"><div class="e">'+ic+'</div>'+
+      '<div class="t"><b>'+c.word+' '+esc(x.what)+(x.qty?' · '+esc(x.qty):'')+'</b><small>'+thDate(x.date)+'</small></div>'+
+      '<div class="m" style="color:'+c.color+'">'+c.sign+money(x.amount)+'</div>'+
+      '<button class="x" onclick="del('+x.id+')">✕</button></div>';
+  }).join('')
+  :'<div class="empty">📭 ยังไม่มีรายการ<br>กดปุ่ม ⚡ จดเร็ว หรือ ➕ บันทึก ด้านล่าง</div>';
+}
+
+/* ══════════ 9) โหมดจดเร็ว ══════════ */
+const QEMOS=['🛒','🍜','🍚','🍗','🍢','🍬','🍞','🥤','☕','🧋','🍵','🥛','🧊','🍺','🚬','🧴','🧻','🥬','🍎','🥚','🍦','🌶️','💊','🔌'];
+const PACKS={
+  g:{n:'🏪 ร้านชำ',   it:[['🥤','น้ำอัดลม',15],['🍬','ขนมซอง',10],['🍜','มาม่า',7],['🧊','น้ำแข็ง',10],['🧻','ทิชชู่',20],['🥚','ไข่ไก่',5]]},
+  f:{n:'🍜 ร้านอาหาร',it:[['🍜','ก๋วยเตี๋ยว',50],['🍚','ข้าวราดแกง',50],['🍳','ไข่ดาว',10],['🍢','ลูกชิ้น',20],['🥤','น้ำเปล่า',10],['🧊','น้ำแข็ง',5]]},
+  d:{n:'☕ ร้านเครื่องดื่ม',it:[['☕','กาแฟเย็น',35],['🍵','ชาเย็น',30],['🧋','ชานมไข่มุก',45],['🥤','น้ำอัดลม',20],['🥛','นมสด',35],['🧊','เพิ่มน้ำแข็ง',5]]}
+};
+let qEdit=false, qUndoStack=[], qEditId=0, qPick='🛒', qType='sell', toastTimer=null;
+let soundOn=true; try{soundOn=localStorage.getItem('shopbook_sound')!=='0';}catch(e){}
+let AC=null, wl=null, nBuf='';
+
+function beep(){
+  if(!soundOn)return;
+  try{
+    AC=AC||new (window.AudioContext||window.webkitAudioContext)();
+    if(AC.state==='suspended') AC.resume();
+    const o=AC.createOscillator(), g=AC.createGain();
+    o.type='sine'; o.frequency.value=920;
+    g.gain.setValueAtTime(.0001,AC.currentTime);
+    g.gain.exponentialRampToValueAtTime(.22,AC.currentTime+.012);
+    g.gain.exponentialRampToValueAtTime(.0001,AC.currentTime+.16);
+    o.connect(g); g.connect(AC.destination);
+    o.start(); o.stop(AC.currentTime+.18);
+  }catch(e){}
+}
+function toast(msg){
+  $('toastMsg').textContent=msg;
+  $('toast').classList.remove('hide');
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>$('toast').classList.add('hide'),4500);
+}
+function qSound(){
+  soundOn=!soundOn;
+  try{localStorage.setItem('shopbook_sound',soundOn?'1':'0');}catch(e){}
+  $('qSndBtn').textContent='🔊 เสียง: '+(soundOn?'เปิด':'ปิด');
+  if(soundOn) beep();
+}
+async function qWake(){
+  try{
+    if(wl){await wl.release(); wl=null; $('qWakeBtn').textContent='☀️ กันจอดับ: ปิด'; return;}
+    if(!('wakeLock' in navigator)){alert('⚠️ เครื่องนี้ไม่รองรับการกันจอดับ');return;}
+    wl=await navigator.wakeLock.request('screen');
+    wl.addEventListener('release',()=>{wl=null;$('qWakeBtn').textContent='☀️ กันจอดับ: ปิด';});
+    $('qWakeBtn').textContent='☀️ กันจอดับ: เปิด';
+    toast('☀️ จอจะไม่ดับระหว่างเปิดแอปนี้');
+  }catch(e){alert('⚠️ เปิดกันจอดับไม่ได้');}
+}
+document.addEventListener('visibilitychange',async()=>{
+  if(wl===null)return;
+  if(document.visibilityState==='visible'){try{wl=await navigator.wakeLock.request('screen');}catch(e){}}
+});
+function qRecord(tp,emo,name,price,qb,note){
+  const today=dkey(new Date());
+  let row=qb?db.find(x=>x.date===today&&x.qb===qb&&x.src==='quick'&&x.unit===price&&x.type===tp):null;
+  if(row){ row.n=(row.n||1)+1; row.amount+=price; row.qty='× '+row.n; }
+  else{
+    row={id:uid(),type:tp,what:name,qty:note||'× 1',amount:price,date:today,src:'quick',qb:qb||0,unit:price,n:1,emo:emo};
+    db.push(row);
+  }
+  persist();
+  qUndoStack.push({rowId:row.id,unit:price});
+  if(qUndoStack.length>200) qUndoStack.shift();
+  beep(); if(navigator.vibrate) navigator.vibrate(18);
+  toast('✅ '+(tp==='buy'?'จ่าย':'ขาย')+' '+name+' '+money(price)+' ฿');
+  qRender(); render();
+}
+function qTap(id){
+  if(qEdit){qOpen(id);return;}
+  const b=quick.find(x=>x.id===id); if(!b)return;
+  qRecord(b.type||'sell',b.emo,b.name,b.price,b.id);
+}
+function qUndo(){
+  const u=qUndoStack.pop();
+  if(!u){toast('ไม่มีรายการให้ยกเลิกแล้ว');return;}
+  const row=db.find(x=>x.id===u.rowId);
+  if(!row){toast('รายการนี้ถูกลบไปแล้ว');qRender();return;}
+  if((row.n||1)>1){row.n--;row.amount-=u.unit;row.qty='× '+row.n;}
+  else db=db.filter(x=>x.id!==row.id);
+  persist(); qRender(); render();
+  if(navigator.vibrate) navigator.vibrate([12,40,12]);
+  toast('↩️ ยกเลิกแล้ว −'+money(u.unit)+' ฿');
+}
+function qMinus(id){
+  const row=db.find(x=>x.id===id); if(!row)return;
+  const u=row.unit||row.amount;
+  if((row.n||1)>1){row.n--;row.amount-=u;row.qty='× '+row.n;}
+  else{ if(!confirm('❌ ลบรายการนี้?'))return; db=db.filter(x=>x.id!==id); }
+  persist(); qRender(); render();
+}
+function qEditToggle(){
+  qEdit=!qEdit;
+  const b=$('qEdBtn');
+  b.textContent=qEdit?'✅ แก้เสร็จแล้ว':'✏️ แก้ไขปุ่ม';
+  b.style.background=qEdit?'#4f46e5':'#f1f5f9';
+  b.style.color=qEdit?'#fff':'#475569';
+  qRender();
+  if(qEdit) toast('✏️ โหมดแก้ไข: แตะปุ่มไหนก็ได้เพื่อแก้ชื่อ/ราคา');
+}
+function qEmosDraw(){
+  const w=$('qEmos'); w.innerHTML='';
+  QEMOS.forEach(e=>{
+    const b=document.createElement('button');
+    b.type='button'; b.textContent=e;
+    if(e===qPick) b.className='on';
+    b.onclick=()=>{qPick=e;qEmosDraw();};
+    w.appendChild(b);
+  });
+}
+function qTypeSet(t){
+  qType=t;
+  $('qt1').className=t==='sell'?'k2':'';
+  $('qt2').className=t==='buy'?'k1':'';
+}
+function qOpen(id){
+  qEditId=id||0;
+  const b=id?quick.find(x=>x.id===id):null;
+  $('qTitle').textContent=b?'✏️ แก้ไขปุ่ม':'➕ เพิ่มปุ่มลัด';
+  $('qName').value=b?b.name:'';
+  $('qPrice').value=b?b.price:'';
+  fx('qPrice','qPriceR');
+  qPick=b?b.emo:'🛒'; qType=b?(b.type||'sell'):'sell';
+  qEmosDraw(); qTypeSet(qType);
+  $('qMoveRow').classList.toggle('hide',!b);
+  $('maskQ').classList.remove('hide');
+}
+function qClose(){$('maskQ').classList.add('hide');}
+function qSave(){
+  const n=$('qName').value.trim(), p=calcVal($('qPrice').value);
+  if(!n){alert('⚠️ ใส่ชื่อสินค้าก่อนนะ');return;}
+  if(isNaN(p)||p<=0){alert('⚠️ ราคาหรือสูตรไม่ถูกต้อง\nลองใหม่ เช่น 50 หรือ 45+5');return;}
+  if(qEditId){
+    const b=quick.find(x=>x.id===qEditId);
+    if(b){b.name=n.slice(0,18);b.price=p;b.emo=qPick;b.type=qType;}
+  }else{
+    if(quick.length>=24){alert('⚠️ ใส่ได้สูงสุด 24 ปุ่ม ลบปุ่มที่ไม่ใช้ก่อนนะ');return;}
+    quick.push({id:uid(),emo:qPick,name:n.slice(0,18),price:p,type:qType});
+  }
+  persistQ(); qClose(); qRender();
+}
+function qDel(){
+  if(!qEditId)return;
+  if(!confirm('❌ ลบปุ่มนี้? (ยอดที่จดไปแล้วไม่หาย)'))return;
+  quick=quick.filter(x=>x.id!==qEditId);
+  persistQ(); qClose(); qRender();
+}
+function qMove(d){
+  const i=quick.findIndex(x=>x.id===qEditId), j=i+d;
+  if(i<0||j<0||j>=quick.length)return;
+  const t=quick[i]; quick[i]=quick[j]; quick[j]=t;
+  persistQ(); qRender();
+}
+function qPack(k){
+  const p=PACKS[k]; if(!p)return;
+  p.it.forEach(it=>{ if(!quick.some(q=>q.name===it[1])) quick.push({id:uid(),emo:it[0],name:it[1],price:it[2],type:'sell'}); });
+  persistQ(); qRender();
+  alert('✅ ใส่ชุดปุ่ม '+p.n+' ให้แล้ว\nแก้ชื่อ/ราคาได้ที่ ✏️ แก้ไขปุ่ม');
+}
+function qSuggest(){
+  const g={};
+  db.filter(x=>x.type==='sell'&&x.what.indexOf('เก็บหนี้ ')!==0).slice(-300).forEach(x=>{
+    const k=x.what; g[k]=g[k]||{c:0,sum:0,u:{}};
+    const u=Math.round(x.unit||(x.amount/(x.n||1)));
+    g[k].c+=(x.n||1); g[k].sum+=x.amount; g[k].u[u]=(g[k].u[u]||0)+1;
+  });
+  const list=Object.entries(g).sort((a,b)=>b[1].c-a[1].c).slice(0,6);
+  if(!list.length){alert('📭 ยังไม่มีประวัติการขาย ลองกดชุดปุ่มสำเร็จรูป หรือเพิ่มปุ่มเองก่อนนะ');return;}
+  let add=0;
+  list.forEach(function(e){
+    const name=e[0], v=e[1];
+    if(quick.some(q=>q.name===name))return;
+    const u=+Object.entries(v.u).sort((a,b)=>b[1]-a[1])[0][0];
+    quick.push({id:uid(),emo:'🛒',name:name.slice(0,18),price:u>0?u:Math.round(v.sum/v.c),type:'sell'});
+    add++;
+  });
+  persistQ(); qRender();
+  alert(add?('✨ สร้างปุ่มให้ '+add+' ปุ่มแล้ว\nแตะ ✏️ แก้ไขปุ่ม เพื่อเปลี่ยนไอคอน/ราคาได้'):'ℹ️ ของขายบ่อยมีปุ่มครบแล้ว');
+}
+function qRender(){
+  const today=dkey(new Date());
+  const rows=db.filter(x=>x.date===today);
+  $('qToday').textContent=money(sumBy(rows,'sell'))+' ฿';
+  const cnt=rows.filter(x=>x.src==='quick').reduce((a,b)=>a+(b.n||1),0);
+  $('qCount').textContent=cnt?('⚡ จดเร็วไปแล้ว '+cnt+' ครั้งวันนี้'):'ยังไม่ได้จดวันนี้ · แตะปุ่มด้านล่างได้เลย';
+
+  $('qEmpty').innerHTML=quick.length?'':
+    '<div class="card"><h3>⚡ เริ่มใช้ใน 5 วินาที</h3>'+
+    '<div style="font-size:14px;color:#64748b;line-height:1.8">เลือกชุดปุ่มที่ใกล้เคียงร้านคุณ แล้วค่อยแก้ราคาทีหลังได้</div>'+
+    '<div class="pack"><button onclick="qPack(\'g\')">🏪 ร้านชำ</button>'+
+    '<button onclick="qPack(\'f\')">🍜 ร้านอาหาร</button>'+
+    '<button onclick="qPack(\'d\')">☕ เครื่องดื่ม</button>'+
+    '<button onclick="qSuggest()" style="background:#dcfce7;color:#166534">✨ สร้างจากของขายบ่อย</button></div></div>';
+
+  let h=quick.map(b=>
+    '<button class="qbtn'+(b.type==='buy'?' isbuy':'')+(qEdit?' ed':'')+'" onclick="qTap('+b.id+')">'+
+    '<span class="qe">'+(qEdit?'✏️':b.emo)+'</span>'+
+    '<span class="qn">'+esc(b.name)+'</span>'+
+    '<span class="qp">'+(b.type==='buy'?'−':'')+money(b.price)+'</span></button>').join('');
+  h+='<button class="qbtn qadd" onclick="nOpen()"><span class="qe">🧮</span><span class="qn">คิดเลข+บันทึก</span></button>';
+  h+='<button class="qbtn qadd" onclick="qOpen(0)"><span class="qe">➕</span><span class="qn">เพิ่มปุ่ม</span></button>';
+  $('qGrid').innerHTML=h;
+
+  const t=rows.filter(x=>x.type!=='draw').sort((a,b)=>b.id-a.id).slice(0,10);
+  $('qList').innerHTML=t.length?t.map(x=>{
+    const c=T[x.type]||T.sell;
+    return '<div class="item"><div class="e">'+(x.emo||c.emo)+'</div>'+
+      '<div class="t"><b>'+esc(x.what)+(x.qty?' '+esc(x.qty):'')+'</b><small>'+c.word+' · วันนี้</small></div>'+
+      '<div class="m" style="color:'+c.color+'">'+c.sign+money(x.amount)+'</div>'+
+      '<button class="mn" onclick="qMinus('+x.id+')">−1</button></div>';
+  }).join(''):'<div class="empty">ยังไม่มีรายการวันนี้</div>';
+}
+function nOpen(){nBuf='';nShow();$('nWhat').value='';$('maskN').classList.remove('hide');}
+function nClose(){$('maskN').classList.add('hide');}
+function nKey(k){
+  if(k==='C'){nBuf='';nShow();return;}
+  if(k==='<'){nBuf=nBuf.slice(0,-1);nShow();return;}
+  const last=nBuf.slice(-1);
+  if('+-*/'.indexOf(k)>=0){
+    if(!nBuf)return;
+    if('+-*/'.indexOf(last)>=0) nBuf=nBuf.slice(0,-1);
+    nBuf+=k; nShow(); return;
+  }
+  if(nBuf.length>=26)return;
+  if(k==='.'){
+    const seg=nBuf.split(/[+\-*/]/).pop();
+    if(seg.indexOf('.')>=0)return;
+    if(!seg) nBuf+='0';
+  }
+  nBuf+=k; nShow();
+}
+function nShow(){
+  $('nExp').textContent=nBuf?nBuf.replace(/\*/g,' × ').replace(/\//g,' ÷ ').replace(/\+/g,' + ').replace(/-/g,' − '):'—';
+  const v=calcVal(nBuf);
+  $('nAmt').textContent=(isNaN(v)?'0':money(v))+' ฿';
+  $('nAmt').style.color=(nBuf&&isNaN(v))?'#fca5a5':'#fff';
+}
+function nSave(){
+  const a=calcVal(nBuf);
+  if(isNaN(a)||a<=0){alert('⚠️ สูตรยังไม่สมบูรณ์ ลองตรวจตัวเลขอีกที');return;}
+  const note=/[+\-*/]/.test(nBuf)?nBuf.replace(/\*/g,'×').replace(/\//g,'÷'):'× 1';
+  qRecord('sell','🛒',$('nWhat').value.trim().slice(0,24)||'ขายหน้าร้าน',a,0,note);
+  nClose();
+}
+
+/* ══════════ 10) ระบบลูกหนี้ ══════════ */
+function openDebt(name){
+  $('dName').value=name||''; $('dWhat').value=''; clr('dAmt','dAmtR');
+  $('dDate').value=dkey(new Date());
+  const w=$('dChips'); w.innerHTML='';
+  [...new Set(debts.slice().reverse().map(x=>x.name))].slice(0,8).forEach(n=>{
+    const b=document.createElement('button');
+    b.type='button'; b.className='chip'; b.textContent='👤 '+n;
+    b.onclick=()=>{$('dName').value=n;};
+    w.appendChild(b);
+  });
+  $('maskD').classList.remove('hide');
+}
+function closeDebt(){$('maskD').classList.add('hide');}
+function saveDebt(){
+  const n=$('dName').value.trim(), raw=$('dAmt').value.trim();
+  let w=$('dWhat').value.trim()||'ของในร้าน';
+  const a=calcVal(raw);
+  if(!n){alert('⚠️ ใส่ชื่อลูกค้าก่อนนะ');return;}
+  if(isNaN(a)||a<=0){alert('⚠️ จำนวนเงินหรือสูตรไม่ถูกต้อง\nลองใหม่ เช่น 350 หรือ 50*3+200');return;}
+  if(hasOp(raw)) w=w+' ('+raw.replace(/\*/g,'×').replace(/\//g,'÷')+')';
+  debts.push({id:uid(),name:n.slice(0,30),what:w,amount:a,paid:0,date:$('dDate').value||dkey(new Date())});
+  persistD(); closeDebt(); renderDebt();
+  alert('📒 จดหนี้แล้ว: '+n+' ค้าง '+money(a)+' บาท');
+}
+function delDebt(id){
+  if(!confirm('❌ ลบรายการหนี้นี้?'))return;
+  debts=debts.filter(x=>x.id!==id); persistD(); renderDebt(); render();
+}
+function toggleD(i){$('dx'+i).classList.toggle('hide');}
+function payOpen(i){
+  payIdx=i; const g=DVIEW[i];
+  $('pTitle').textContent='💵 รับเงินจาก '+g.name;
+  $('pSub').textContent='ยอดค้างทั้งหมด '+money(g.owe)+' บาท · จ่ายบางส่วนก็ได้ ระบบจะตัดหนี้ก้อนเก่าสุดให้ก่อน';
+  clr('payAmt','payAmtR'); $('payIncome').checked=true;
+  $('maskP').classList.remove('hide');
+}
+function closePay(){$('maskP').classList.add('hide');payIdx=-1;}
+function payFull(){ if(payIdx>=0){ $('payAmt').value=DVIEW[payIdx].owe; fx('payAmt','payAmtR'); } }
+function payDo(){
+  if(payIdx<0)return;
+  const g=DVIEW[payIdx];
+  let a=calcVal($('payAmt').value);
+  if(isNaN(a)||a<=0){alert('⚠️ จำนวนเงินหรือสูตรไม่ถูกต้อง');return;}
+  if(a>g.owe+0.001){
+    if(!confirm('💰 เงินมากกว่ายอดค้าง จะบันทึกเท่ายอดค้าง '+money(g.owe)+' บาท ตกลงไหม?'))return;
+    a=g.owe;
+  }
+  let left=a;
+  g.items.filter(x=>remain(x)>0).sort((x,y)=>x.date.localeCompare(y.date)||x.id-y.id).forEach(d=>{
+    if(left<=0)return;
+    const t=Math.min(remain(d),left);
+    d.paid=(d.paid||0)+t; left-=t;
+  });
+  persistD();
+  if($('payIncome').checked){
+    db.push({id:uid(),type:'sell',what:'เก็บหนี้ '+g.name,qty:'',amount:a,date:dkey(new Date()),src:'debt'});
+    persist();
+  }
+  const rest=g.owe-a;
+  closePay(); renderDebt(); render(); qRender();
+  alert('✅ รับเงิน '+money(a)+' บาทแล้ว'+(rest>0?'\n📒 เหลือค้างอีก '+money(rest)+' บาท':'\n🎉 เก็บครบแล้ว!'));
+}
+function remind(i){
+  const g=DVIEW[i];
+  const lines=g.items.filter(x=>remain(x)>0)
+    .map(x=>'• '+x.what+' '+money(remain(x))+' บาท ('+thDate(x.date)+')').join('\n');
+  sendText('สวัสดีครับ/ค่ะ 🙏\nจาก '+shop.emo+' '+shop.name+'\n\nแจ้งยอดค้างชำระของคุณ '+g.name+'\n'+lines+
+           '\n\nรวมทั้งหมด '+money(g.owe)+' บาท\nรบกวนชำระด้วยนะครับ/คะ ขอบคุณมากครับ/ค่ะ 🙏');
+}
+function sendText(msg){
+  if(navigator.share){navigator.share({text:msg}).catch(()=>{});return;}
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(msg).then(()=>alert('📋 ก๊อปข้อความแล้ว วางในไลน์ได้เลย'),()=>prompt('ก๊อปข้อความนี้',msg));
+    return;
+  }
+  prompt('ก๊อปข้อความนี้',msg);
+}
+function renderDebt(){
+  const g={};
+  debts.forEach(d=>{(g[d.name]=g[d.name]||[]).push(d);});
+  let act=[], done=[];
+  Object.keys(g).forEach(n=>{
+    const items=g[n].slice().sort((a,b)=>a.date.localeCompare(b.date)||a.id-b.id);
+    const owe=items.reduce((s,x)=>s+remain(x),0);
+    const open=items.filter(x=>remain(x)>0);
+    const oldest=open.length?open[0].date:items[items.length-1].date;
+    (owe>0?act:done).push({name:n,items:items,owe:owe,oldest:oldest});
+  });
+  act.sort((a,b)=>b.owe-a.owe);
+  DVIEW=act;
+  $('dTotal').textContent=money(act.reduce((a,b)=>a+b.owe,0));
+  $('dPeople').textContent=act.length;
+  $('dLate').textContent=act.filter(x=>ageOf(x.oldest)>30).length;
+  $('dList').innerHTML=act.length?act.map((c,i)=>{
+    const age=ageOf(c.oldest);
+    const late=age>30?'<span class="late">🔴 เกิน '+age+' วัน</span>':'';
+    const body=c.items.filter(x=>remain(x)>0).map(x=>
+      '<div class="dline"><div class="dt">'+esc(x.what)+'<small>📅 '+thDate(x.date)+' · '+ageOf(x.date)+' วันที่แล้ว'+
+      ((x.paid||0)>0?' · จ่ายแล้ว '+money(x.paid):'')+'</small></div>'+
+      '<div class="dv">'+money(remain(x))+'</div>'+
+      '<button class="x" onclick="delDebt('+x.id+')">✕</button></div>').join('');
+    return '<div class="dcard">'+
+      '<div class="drow" onclick="toggleD('+i+')"><div class="da">👤</div>'+
+      '<div class="dn"><b>'+esc(c.name)+late+'</b><small>'+c.items.filter(x=>remain(x)>0).length+' รายการ · ค้างมา '+age+' วัน · แตะดูรายละเอียด</small></div>'+
+      '<div class="dm">'+money(c.owe)+' ฿</div></div>'+
+      '<div id="dx'+i+'" class="dbody hide">'+body+'</div>'+
+      '<div class="dbtns"><button class="b1" onclick="payOpen('+i+')">💵 รับชำระ</button>'+
+      '<button class="b2" onclick="remind('+i+')">📣 ทวงแบบสุภาพ</button></div></div>';
+  }).join('')
+  :'<div class="card empty">🎉 ไม่มีใครติดหนี้เลย<br>กดปุ่ม ➕ จดหนี้ใหม่ ด้านบนเมื่อมีคนติด</div>';
+  $('dDone').innerHTML=done.length?done.slice(-15).reverse().map(c=>
+    '<div class="rank paid">✅ '+esc(c.name)+' <b style="color:#94a3b8">เก็บครบ '+money(c.items.reduce((a,b)=>a+b.amount,0))+' ฿</b></div>'
+  ).join(''):'<div class="empty">ยังไม่มีประวัติ</div>';
+}
+
+/* ══════════ 11) สรุปรายเดือน + วาดรูป ══════════ */
+let mCur=dkey(new Date()).slice(0,7), lastPNG='';
+const FT='"Kanit","Sarabun","Noto Sans Thai","Apple Color Emoji","Segoe UI Emoji",sans-serif';
+function mLabel(mk){
+  const y=+mk.slice(0,4), m=+mk.slice(5,7);
+  return new Date(y,m-1,1).toLocaleDateString('th-TH',{month:'long',year:'numeric'});
+}
+function mList(){
+  const s=new Set(db.map(x=>x.date.slice(0,7)));
+  const n=new Date();
+  for(let i=0;i<12;i++){const d=new Date(n.getFullYear(),n.getMonth()-i,1);s.add(dkey(d).slice(0,7));}
+  s.add(mCur);
+  return [...s].sort().reverse();
+}
+function fillMonths(){
+  const sel=$('mSel');
+  sel.innerHTML=mList().map(m=>'<option value="'+m+'">'+mLabel(m)+'</option>').join('');
+  sel.value=mCur;
+}
+function mPick(v){ mCur=v; buildReport(); }
+function mShift(n){
+  const y=+mCur.slice(0,4), m=+mCur.slice(5,7);
+  mCur=dkey(new Date(y,m-1+n,1)).slice(0,7);
+  fillMonths(); buildReport();
+}
+function monthStats(mk){
+  const rows=db.filter(x=>x.date.slice(0,7)===mk);
+  const s=sumBy(rows,'sell'), b=sumBy(rows,'buy'), d=sumBy(rows,'draw');
+  const y=+mk.slice(0,4), m=+mk.slice(5,7), days=new Date(y,m,0).getDate();
+  const vals=[]; let bestD=0,bestV=0,active=0;
+  for(let i=1;i<=days;i++){
+    const k=mk+'-'+String(i).padStart(2,'0');
+    const r=rows.filter(x=>x.date===k);
+    const sv=sumBy(r,'sell'), bv=sumBy(r,'buy');
+    vals.push(sv-bv);
+    if(sv>0){active++; if(sv>bestV){bestV=sv;bestD=i;}}
+  }
+  let py=y, pm=m-1; if(pm===0){pm=12;py--;}
+  const prow=db.filter(x=>x.date.slice(0,7)===(py+'-'+String(pm).padStart(2,'0')));
+  const pp=sumBy(prow,'sell')-sumBy(prow,'buy'), profit=s-b;
+  let cmp;
+  if(!prow.length) cmp='(เดือนก่อนไม่มีข้อมูลให้เทียบ)';
+  else if(pp===0) cmp='เดือนก่อนกำไร 0 ฿';
+  else{
+    const pct=Math.round((profit-pp)/Math.abs(pp)*100);
+    cmp=(pct>=0?'▲ มากกว่าเดือนก่อน ':'▼ น้อยกว่าเดือนก่อน ')+Math.abs(pct)+'%  (เดือนก่อน '+money(pp)+' ฿)';
+  }
+  const g={};
+  rows.filter(x=>x.type==='sell').forEach(x=>{g[x.what]=(g[x.what]||0)+x.amount;});
+  const tops=Object.entries(g).sort((a,b)=>b[1]-a[1]).slice(0,3);
+  return{s:s,b:b,d:d,profit:profit,cash:s-b-d,vals:vals,days:days,active:active,
+    avg:active?Math.round(s/active):0,
+    bestTxt:bestV>0?('วันที่ '+bestD+' — ขายได้ '+money(bestV)+' ฿'):'— ยังไม่มียอดขาย —',
+    tops:tops,owe:oweAll(),debtors:new Set(debts.filter(x=>remain(x)>0).map(x=>x.name)).size,cmp:cmp};
+}
+function tx(g,s,x,y,size,color,align,bold){
+  g.fillStyle=color; g.textAlign=align||'left'; g.textBaseline='alphabetic';
+  g.font=(bold?'700 ':'400 ')+size+'px '+FT;
+  g.fillText(s,x,y);
+}
+function cut(g,s,size,bold,maxw){
+  g.font=(bold?'700 ':'400 ')+size+'px '+FT; s=String(s);
+  if(g.measureText(s).width<=maxw) return s;
+  while(s.length>1&&g.measureText(s+'…').width>maxw) s=s.slice(0,-1);
+  return s+'…';
+}
+function bx(g,x,y,w,h,r,fill){
+  r=Math.min(r,w/2,h/2);
+  g.beginPath(); g.moveTo(x+r,y);
+  g.arcTo(x+w,y,x+w,y+h,r); g.arcTo(x+w,y+h,x,y+h,r);
+  g.arcTo(x,y+h,x,y,r); g.arcTo(x,y,x+w,y,r); g.closePath();
+  g.fillStyle=fill; g.fill();
+}
+function cell(g,x,y,w,h,bg,label,val,col){
+  bx(g,x,y,w,h,26,bg);
+  tx(g,label,x+w/2,y+58,28,col,'center');
+  tx(g,val,x+w/2,y+120,46,col,'center',1);
+}
+function buildReport(){
+  const st=monthStats(mCur), showDebt=$('rpDebt').checked;
+  const W=1080, M=48, IW=W-M*2, H=showDebt?2108:1964;
+  const c=document.createElement('canvas'); c.width=W; c.height=H;
+  const g=c.getContext('2d');
+  g.fillStyle='#f1f5f9'; g.fillRect(0,0,W,H);
+  const gr=g.createLinearGradient(0,0,W,300);
+  gr.addColorStop(0,'#0d9488'); gr.addColorStop(1,'#14b8a6');
+  g.fillStyle=gr; g.fillRect(0,0,W,300);
+  tx(g,shop.emo,M,132,78,'#fff','left');
+  tx(g,cut(g,shop.name,50,1,IW-130),M+110,120,50,'#fff','left',1);
+  tx(g,'สรุปยอดประจำเดือน',M+110,170,32,'rgba(255,255,255,.9)','left');
+  const ml=mLabel(mCur);
+  g.font='700 40px '+FT;
+  bx(g,M,196,g.measureText(ml).width+56,68,34,'rgba(255,255,255,.22)');
+  tx(g,ml,M+28,242,40,'#fff','left',1);
+
+  let y=324;
+  bx(g,M,y,IW,270,36,'#e0f2fe');
+  tx(g,st.profit>0?'😄':(st.profit===0?'😐':'😰'),W/2,y+96,72,'#000','center');
+  tx(g,'💰 กำไรเดือนนี้ (ขาย − ลงทุน)',W/2,y+146,30,'#0369a1','center');
+  tx(g,money(st.profit)+' ฿',W/2,y+222,92,'#075985','center',1);
+  tx(g,st.cmp,W/2,y+256,26,'#0284c7','center');
+  y+=294;
+
+  const bw=(IW-24)/2, bh=150;
+  cell(g,M,y,bw,bh,'#dcfce7','🛒 ขายได้ทั้งเดือน',money(st.s)+' ฿','#166534');
+  cell(g,M+bw+24,y,bw,bh,'#fee2e2','📦 ลงทุนซื้อของ',money(st.b)+' ฿','#991b1b');
+  y+=bh+20;
+  cell(g,M,y,bw,bh,'#ffedd5','🏧 ถอนไปใช้',money(st.d)+' ฿','#9a3412');
+  cell(g,M+bw+24,y,bw,bh,'#e2e8f0','👛 เงินเหลือในร้าน',money(st.cash)+' ฿','#334155');
+  y+=bh+24;
+
+  if(showDebt){
+    bx(g,M,y,IW,120,30,'#fef3c7');
+    tx(g,'📒 ลูกค้ายังติดหนี้ (ยอดล่าสุด)',M+34,y+56,30,'#92400e','left');
+    tx(g,'ค้างอยู่ '+st.debtors+' คน',M+34,y+96,26,'#b45309','left');
+    tx(g,money(st.owe)+' ฿',M+IW-34,y+82,46,'#92400e','right',1);
+    y+=144;
+  }
+
+  bx(g,M,y,IW,380,30,'#ffffff');
+  tx(g,'📊 กำไรรายวัน',M+34,y+56,32,'#0f172a','left',1);
+  const x0=M+40, x1=M+IW-40, ct=y+92, ch=228, vs=st.vals, n=vs.length;
+  const mxv=Math.max(0,...vs), mnv=Math.min(0,...vs), span=Math.max(1,mxv-mnv);
+  const zy=(mxv===0&&mnv===0)?ct+ch:ct+(mxv/span)*ch;
+  tx(g,'สูงสุด '+money(mxv)+' ฿',x1,y+56,24,'#94a3b8','right');
+  g.strokeStyle='#e2e8f0'; g.lineWidth=2;
+  g.beginPath(); g.moveTo(x0,zy); g.lineTo(x1,zy); g.stroke();
+  const gp=6, bwd=Math.max(4,((x1-x0)-gp*(n-1))/n);
+  vs.forEach((v,i)=>{
+    const px=x0+i*(bwd+gp), hh=Math.max(3,Math.abs(v)/span*ch);
+    bx(g,px,v>=0?zy-hh:zy,bwd,hh,Math.min(8,bwd/2),v<0?'#f87171':'#14b8a6');
+  });
+  for(let i=0;i<n;i++){
+    if(i===0||(i+1)%5===0) tx(g,String(i+1),x0+i*(bwd+gp)+bwd/2,ct+ch+46,22,'#94a3b8','center');
+  }
+  y+=404;
+
+  bx(g,M,y,IW,260,30,'#ffffff');
+  tx(g,'🔥 ขายดี 3 อันดับ',M+34,y+56,32,'#0f172a','left',1);
+  if(st.tops.length){
+    const md=['🥇','🥈','🥉'];
+    st.tops.forEach((t,i)=>{
+      const ly=y+124+i*54;
+      tx(g,md[i]+' '+cut(g,t[0],30,0,IW-380),M+34,ly,30,'#334155','left');
+      tx(g,money(t[1])+' ฿',M+IW-34,ly,32,'#16a34a','right',1);
+    });
+  }else tx(g,'— ยังไม่มียอดขายในเดือนนี้ —',W/2,y+160,30,'#94a3b8','center');
+  y+=284;
+
+  bx(g,M,y,IW,220,30,'#ffffff');
+  tx(g,'📌 ข้อมูลน่ารู้',M+34,y+54,32,'#0f172a','left',1);
+  tx(g,'🗓️ ขายดีที่สุด: '+st.bestTxt,M+34,y+110,28,'#475569','left');
+  tx(g,'📈 เฉลี่ยขายวันละ '+money(st.avg)+' ฿ (เฉพาะวันที่มีขาย)',M+34,y+158,28,'#475569','left');
+  tx(g,'✅ เดือนนี้ขายจริง '+st.active+' วัน จากทั้งหมด '+st.days+' วัน',M+34,y+206,28,'#475569','left');
+  y+=244;
+
+  tx(g,shop.emo+' '+shop.name+' · สร้างเมื่อ '+new Date().toLocaleDateString('th-TH',{day:'numeric',month:'short',year:'2-digit'}),
+     W/2,y+34,24,'#94a3b8','center');
+
+  lastPNG=c.toDataURL('image/png');
+  $('rpImg').src=lastPNG;
+}
+function dataURLtoBlob(u){
+  const p=u.split(','), bs=atob(p[1]), a=new Uint8Array(bs.length);
+  for(let i=0;i<bs.length;i++) a[i]=bs.charCodeAt(i);
+  return new Blob([a],{type:'image/png'});
+}
+function shareReport(){
+  if(!lastPNG){alert('⚠️ ยังไม่มีรูป ลองเลือกเดือนใหม่อีกครั้ง');return;}
+  const name='สรุป-'+safeFile(shop.name)+'-'+mLabel(mCur).replace(/\s/g,'')+'.png';
+  const blob=dataURLtoBlob(lastPNG);
+  try{
+    const file=new File([blob],name,{type:'image/png'});
+    if(navigator.canShare&&navigator.canShare({files:[file]})){
+      navigator.share({files:[file],title:name}).catch(()=>{}); return;
+    }
+  }catch(e){}
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob); a.download=name;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(()=>URL.revokeObjectURL(a.href),4000);
+}
+function copyReport(){
+  const st=monthStats(mCur);
+  let t='📊 สรุปเดือน '+mLabel(mCur)+'\n'+shop.emo+' '+shop.name+'\n──────────────\n';
+  t+='🛒 ขายได้ '+money(st.s)+' ฿\n📦 ลงทุน '+money(st.b)+' ฿\n💰 กำไร '+money(st.profit)+' ฿\n';
+  t+='🏧 ถอนไปใช้ '+money(st.d)+' ฿\n👛 เงินเหลือ '+money(st.cash)+' ฿\n';
+  if($('rpDebt').checked) t+='📒 ลูกค้าติดหนี้ '+money(st.owe)+' ฿ ('+st.debtors+' คน)\n';
+  t+='──────────────\n'+st.cmp+'\n';
+  if(st.tops.length) t+='🔥 ขายดี: '+st.tops.map((x,i)=>(i+1)+'.'+x[0]+' '+money(x[1])+' ฿').join(' · ')+'\n';
+  t+='🗓️ ขายดีที่สุด '+st.bestTxt;
+  sendText(t);
+}
+
+/* ══════════ 12) ส่งออก / สำรอง / กู้ ══════════ */
+async function out(text,name,mime){
+  const blob=new Blob([text],{type:mime});
+  try{
+    const file=new File([blob],name,{type:mime});
+    if(navigator.canShare&&navigator.canShare({files:[file]})){
+      await navigator.share({files:[file],title:name}); return;
+    }
+  }catch(e){ if(e&&e.name==='AbortError') return; }
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob); a.download=name;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(()=>URL.revokeObjectURL(a.href),4000);
+}
+function csv(){
+  if(!db.length&&!debts.length){alert('📭 ยังไม่มีข้อมูล');return;}
+  let t='\uFEFFร้าน,"'+shop.name+'"\nออกรายงานวันที่,'+dkey(new Date())+'\n\n';
+  t+='[ รายรับ-รายจ่าย ]\nวันที่,ทำอะไร,ชื่อรายการ,จำนวน/สูตร,เงิน(บาท)\n';
+  db.slice().sort((a,b)=>a.date.localeCompare(b.date)).forEach(x=>{
+    const w={buy:'ลงทุน',sell:'ขาย',draw:'ถอนไปใช้'}[x.type]||'';
+    t+=x.date+','+w+',"'+x.what+'","'+(x.qty||'')+'",'+x.amount+'\n';
+  });
+  const s=sumBy(db,'sell'), b=sumBy(db,'buy'), d=sumBy(db,'draw');
+  t+='\nรวมขาย,,,,'+s+'\nรวมลงทุน,,,,'+b+'\nกำไร,,,,'+(s-b)+'\nรวมถอน,,,,'+d+'\nเงินเหลือ,,,,'+(s-b-d)+'\n';
+  t+='\n\n[ ลูกค้าติดหนี้ ]\nชื่อลูกค้า,รายการ,วันที่,ยอดเต็ม,จ่ายแล้ว,ค้างอยู่,ค้างมา(วัน)\n';
+  debts.slice().sort((a,b)=>a.name.localeCompare(b.name,'th')||a.date.localeCompare(b.date)).forEach(x=>{
+    t+='"'+x.name+'","'+x.what+'",'+x.date+','+x.amount+','+(x.paid||0)+','+remain(x)+','+ageOf(x.date)+'\n';
+  });
+  t+='\nค้างจ่ายรวมทั้งหมด,,,,,'+oweAll()+'\n';
+  out(t,'บัญชี-'+safeFile(shop.name)+'.csv','text/csv');
+}
+function backup(){
+  if(!db.length&&!debts.length&&!quick.length){alert('📭 ยังไม่มีข้อมูล');return;}
+  out(JSON.stringify({app:'shopbook',v:8,shop:shop,rows:db,debts:debts,quick:quick}),
+      'สำรอง-'+safeFile(shop.name)+'-'+dkey(new Date())+'.json','application/json');
+}
+function restore(e){
+  const f=e.target.files[0]; if(!f)return;
+  const r=new FileReader();
+  r.onload=()=>{
+    try{
+      const j=JSON.parse(r.result);
+      let rows=null, sh=null, dbt=null, qk=null;
+      if(Array.isArray(j)) rows=j;
+      else if(j&&Array.isArray(j.rows)){rows=j.rows; sh=j.shop; dbt=Array.isArray(j.debts)?j.debts:null; qk=Array.isArray(j.quick)?j.quick:null;}
+      if(!rows) throw 0;
+      if(confirm('📥 กู้ข้อมูล '+rows.length+' รายการ'+(dbt?' + ลูกหนี้ '+dbt.length:'')+(qk?' + ปุ่มลัด '+qk.length:'')+'\n(ของเดิมจะถูกแทนที่)')){
+        db=rows; persist();
+        if(dbt){debts=dbt; persistD();}
+        if(qk){quick=qk; persistQ();}
+        if(sh&&sh.name){shop={name:sh.name,emo:sh.emo||'🏪'};try{localStorage.setItem(SKEY,JSON.stringify(shop));}catch(_){} applyBrand();}
+        render(); renderDebt(); qRender(); alert('✅ กู้ข้อมูลสำเร็จ');
+      }
+    }catch(_){alert('❌ ไฟล์ไม่ถูกต้อง');}
+  };
+  r.readAsText(f); e.target.value='';
+}
+function wipe(){
+  if(confirm('⚠️ ลบข้อมูลเงินทั้งหมดถาวร (รวมลูกหนี้) แน่ใจนะ?\nชื่อร้านกับปุ่มลัดยังอยู่')){
+    db=[]; debts=[]; qUndoStack=[]; persist(); persistD(); render(); renderDebt(); qRender();
+    alert('🗑️ ล้างเรียบร้อย');
+  }
+}
+
+/* ══════════ 13) ติดตั้งเป็นแอป ══════════ */
+let deferred=null;
+const isIOS=/iPad|iPhone|iPod/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+const standalone=window.matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
+function installUI(){
+  const a=$('installArea'), tip=$('tipBox');
+  if(standalone){a.innerHTML='✅ ติดตั้งเป็นแอปเรียบร้อยแล้ว ใช้งานได้แม้ไม่มีเน็ต 📶';return;}
+  if(deferred){
+    a.innerHTML='<button class="big" style="background:#0d9488" onclick="doInstall()">📲 ติดตั้งแอปลงเครื่อง</button>';
+  }else if(isIOS){
+    a.innerHTML='<b>วิธีติดตั้งบนไอโฟน</b><br>1️⃣ ตั้งชื่อร้านให้เสร็จก่อน<br>2️⃣ เปิดหน้านี้ด้วย <b>Safari</b><br>3️⃣ กดปุ่มแชร์ 🔗 ตรงแถบล่าง<br>4️⃣ เลื่อนหา <b>"เพิ่มไปยังหน้าจอโฮม"</b><br>5️⃣ กด "เพิ่ม" มุมขวาบน';
+    tip.innerHTML='📲 <b>เพิ่มลงหน้าจอโฮมก่อนใช้</b> — กดปุ่มแชร์ 🔗 ล่างจอ แล้วเลือก "เพิ่มไปยังหน้าจอโฮม" จะใช้ได้เหมือนแอปจริง';
+    tip.classList.remove('hide');
+  }else{
+    a.innerHTML='เปิดเมนูเบราว์เซอร์ ⋮ แล้วเลือก <b>"ติดตั้งแอป"</b> หรือ <b>"เพิ่มลงในหน้าจอหลัก"</b>';
+  }
+}
+async function doInstall(){
+  if(!deferred)return;
+  deferred.prompt(); await deferred.userChoice; deferred=null; installUI();
+}
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferred=e;installUI();});
+window.addEventListener('appinstalled',()=>{deferred=null;installUI();});
+
+/* ══════════ 14) เริ่มทำงาน ══════════ */
+$('today').textContent='📅 '+new Date().toLocaleDateString('th-TH',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+$('dt').value=dkey(new Date());
+$('dDate').value=dkey(new Date());
+$('qSndBtn').textContent='🔊 เสียง: '+(soundOn?'เปิด':'ปิด');
+applyBrand(); setType('sell'); render(); renderDebt(); qRender(); fillMonths(); installUI();
+if(isFirst) openShop(true);
+if('serviceWorker' in navigator && location.protocol==='https:'){
+  navigator.serviceWorker.register('sw.js').catch(()=>{});
+}
+</script>
+</body>
+</html>
