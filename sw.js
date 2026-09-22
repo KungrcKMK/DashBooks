@@ -1,11 +1,11 @@
 /* ══════════════════════════════════════════════
-   sw.js — Service Worker สมุดบัญชีร้านค้า v9
+   sw.js — Service Worker สมุดบัญชีร้านค้า v10
    • เปิดใช้ออฟไลน์ได้เต็มที่ (ไม่มีเน็ตก็เปิดแอปได้)
    • อัปเดตไฟล์ใหม่อัตโนมัติเมื่อมีการแก้ index.html
    • ล้างแคชเก่าทิ้งให้เอง ไม่ค้างเวอร์ชันเดิม
    ══════════════════════════════════════════════ */
 
-const CACHE = 'shopbook-v9';
+const CACHE = 'shopbook-v10';
 
 /* ไฟล์ที่ต้องเก็บไว้ใช้ตอนไม่มีเน็ต */
 const FILES = [
@@ -22,7 +22,8 @@ const FILES = [
 self.addEventListener('install', e => {
   e.waitUntil(
     caches.open(CACHE)
-      .then(c => c.addAll(FILES))
+      /* cache:'reload' = ข้ามแคช HTTP ของเบราว์เซอร์ ได้ไฟล์ล่าสุดจริง */
+      .then(c => c.addAll(FILES.map(f => new Request(f, { cache: 'reload' }))))
       .catch(() => {})
       .then(() => self.skipWaiting())
   );
@@ -53,7 +54,8 @@ self.addEventListener('fetch', e => {
 
   if (isPage) {
     e.respondWith(
-      fetch(req)
+      /* no-cache = ถามเซิร์ฟเวอร์ทุกครั้งว่าไฟล์เปลี่ยนไหม (ไม่ใช้ของค้าง 10 นาทีของ GitHub Pages) */
+      fetch(new Request(req.url, { cache: 'no-cache', credentials: 'same-origin' }))
         .then(res => {
           const copy = res.clone();
           caches.open(CACHE).then(c => c.put(req, copy)).catch(() => {});
